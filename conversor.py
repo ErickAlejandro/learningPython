@@ -7,32 +7,22 @@ Opcion3: Pesos Mexicanos
 Elige una opcion: 
 """
 
+def operations(tipo_pesos, valor_dolar):
+    pesos = input("Por favor usted tiene pesos" + tipo_pesos +", ingrese el valor: ")
+    pesos = float(pesos)
+    dolares = pesos / valor_dolar
+    dolares = round(dolares, 2)
+    dolares = str(dolares)
+    print("Tienes $ " + dolares + "dólares")
+
 option = int(input(menu))
 
 if option == 1:
-    pesos = input("Por favor, ingrese el valor: ")
-    pesos = float(pesos)
-    valor_dolar = 3875
-    dolares = pesos / valor_dolar
-    dolares = round(dolares, 2)
-    dolares = str(dolares)
-    print("Tienes $ " + dolares + "dólares")
+    operations("Colombianos", 3875)
 elif option == 2:
-    pesos = input("Por favor, ingrese el valor: ")
-    pesos = float(pesos)
-    valor_dolar = 65
-    dolares = pesos / valor_dolar
-    dolares = round(dolares, 2)
-    dolares = str(dolares)
-    print("Tienes $ " + dolares + "dólares")
+    operations("Argentinos", 65)
 elif option == 3:
-    pesos = input("Por favor, ingrese el valor: ")
-    pesos = float(pesos)
-    valor_dolar = 24
-    dolares = pesos / valor_dolar
-    dolares = round(dolares, 2)
-    dolares = str(dolares)
-    print("Tienes $ " + dolares + "dólares")
+    operations("Mexicanos", 24)
 else:
     print("Ingresa una opcion correcta.")
 
