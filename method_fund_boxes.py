@@ -1,9 +1,22 @@
-from distutils.log import info
+
 import numpy as np
-import cv2 as cv
+import cv2
 import matplotlib.pyplot as plt
 from math import ceil
 import pytesseract as pyt
+
+
+def ocr(bbox):
+    # Lectura de los datos con Pytesseract
+    text = pyt.image_to_string(bbox)
+    text = text.strip('\n\x0c')
+    text = text.replace('\n', ' ')
+    text = text.replace(' -', '-')
+    text = text.replace('- ', '')
+    text = text.replace('&L ', '')
+    print('Informacion de la fila: ' + str(text))
+    return text
+    # plt.show()
 
 
 def convert_img_to_array(coordinates, img):
@@ -20,7 +33,7 @@ def convert_img_to_array(coordinates, img):
     print(m)
 
     # Extraer las dimensiones de la imagen a usar
-    image = cv.imread(img)
+    image = cv2.imread(img)
     y, x = image.shape[:2]
     print('\nEl ancho: ' + str(x) + ' y el alto: ' + str(y) + '\n')
 
@@ -46,22 +59,13 @@ def convert_img_to_array(coordinates, img):
         y1 = ceil(y_center + transform_ruler3_h)
 
         cortado = image[y0:y1, x0:x1]
+        cortado = ocr(cortado)
         # imgplot = plt.imshow(cortado)
 
-        #Lectura de los datos con Pytesseract
-        text = pyt.image_to_string(cortado)
-        text = text.strip('\n\x0c')
-        text = text.replace('\n', ' ')
-        text = text.replace(' -', '-')
-        text = text.replace('- ', '')
-        text = text.replace('&L ', '')
-        print('Texto de la imagen ' + text)
-
-        # plt.show()
-        information.append(text)
-
+        information.append(cortado)
         i += 1
-    print('Informacion completa: \n' + str(information))
+
+    print('Informacion general' + str(information))
 
     # text_g = pyt.image_to_string(image)
     # print('Imagen general: \n' + text_g)
