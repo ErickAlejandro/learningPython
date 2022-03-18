@@ -53,7 +53,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 @torch.no_grad()
 def run(weights=ROOT / '/runs/train/exp7/weights/best.pt',  # model.pt path(s)
         source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
-        data=ROOT / 'data/coco128.yaml',  # dataset.yaml path
+        data=ROOT / 'data/cedulas161.yaml',  # dataset.yaml path
         imgsz=(640, 640),  # inference size (height, width)
         conf_thres=0.01,  # confidence threshold
         iou_thres=0.01,  # NMS IOU threshold
@@ -196,7 +196,6 @@ def run(weights=ROOT / '/runs/train/exp7/weights/best.pt',  # model.pt path(s)
                             save_one_box(
                                 xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
                 print('Information BBox: ' + str(xywh))
-                
 
             # Stream results
             im0 = annotator.result()
@@ -241,6 +240,19 @@ def run(weights=ROOT / '/runs/train/exp7/weights/best.pt',  # model.pt path(s)
 
     #New method about print text
     # extrear la informacion como un array
+    def ocr(bbox):
+        # Lectura de los datos con Pytesseract
+        text = pyt.image_to_string(bbox)
+        text = text.strip('\n\x0c')
+        text = text.replace('\n', ' ')
+        text = text.replace(' -', '-')
+        text = text.replace('- ', '')
+        text = text.replace('&L ', '')
+        print('Informacion de la fila: ' + str(text))
+        return text
+        # plt.show()
+
+        # extrear la informacion como un array
     with open(coordinates, 'r') as t:
         datos = ''.join(t.readlines()).replace('\n', ';')
 
@@ -269,7 +281,7 @@ def run(weights=ROOT / '/runs/train/exp7/weights/best.pt',  # model.pt path(s)
         transform_ruler3_h = (y * m[i, 4]) / 2
 
         print('Escala en PIXELS \nPunto medio en X: ' + str(x_center) + ' PX \nPunto medio en Y: ' + str(y_center) +
-              " PX \nAncho: " + str(transform_ruler3_w) + ' PX \nAlto: ' + str(transform_ruler3_h) + ' PX \n')
+            " PX \nAncho: " + str(transform_ruler3_w) + ' PX \nAlto: ' + str(transform_ruler3_h) + ' PX \n')
 
         # Reconstruccion del bondibox (Informacion del bondybox)
         x0 = ceil(x_center - transform_ruler3_w)
@@ -279,32 +291,23 @@ def run(weights=ROOT / '/runs/train/exp7/weights/best.pt',  # model.pt path(s)
         y1 = ceil(y_center + transform_ruler3_h)
 
         cortado = image[y0:y1, x0:x1]
-        imgplot = plt.imshow(cortado)
+        cortado = ocr(cortado)
+        # imgplot = plt.imshow(cortado)
 
-        #Lectura de los datos con Pytesseract
-        text = pyt.image_to_string(cortado)
-        text = text.strip('\n\x0c')
-        text = text.replace('\n', ' ')
-        text = text.replace(' -', '-')
-        text = text.replace('- ', '')
-        text = text.replace('&L ', '')
-        print('Texto de la imagen ' + text)
-
-        plt.show()
-        information.append(text)
-
+        information.append(cortado)
         i += 1
-    print('Informacion completa: \n' + str(information))
+
+    print('Informacion general' + str(information))
 
 
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT /
-                        '/home/sebastian/yolov5/runs/train/exp6/weights/best.pt', help='model path(s)')
+                        '/runs/train/exp7/weights/best.pt', help='model path(s)')
     parser.add_argument('--source', type=str, default=ROOT /
                         'data/images', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--data', type=str, default=ROOT /
-                        'data/coco128.yaml', help='(optional) dataset.yaml path')
+                        'data/cedulas161.yaml', help='(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+',
                         type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float,
@@ -350,6 +353,8 @@ def parse_opt():
                         help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true',
                         help='use OpenCV DNN for ONNX inference')
+    parser.add_argument('--img-string',default=ROOT / 'information.txt', 
+                        help='add path of image and text about information')
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(FILE.stem, opt)

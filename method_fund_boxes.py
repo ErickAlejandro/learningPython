@@ -60,7 +60,7 @@ def convert_img_to_array(coordinates, img):
 
         cortado = image[y0:y1, x0:x1]
         cortado = ocr(cortado)
-        # imgplot = plt.imshow(cortado)
+        imgplot = plt.imshow(cortado)
 
         information.append(cortado)
         i += 1
