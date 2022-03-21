@@ -19,12 +19,9 @@ def ocr(bbox):
 
 def convert_img_to_array(img):
     # Toma la imagen desde el webservice
-    model = torch.hub.load(
-        '', 'best')
+    model = torch.hub.load('', 'best')
     image = img
     results = model(image)
-    results.pandas().xyxy[0]
-
     m = np.matrix(results)
     information = []
 

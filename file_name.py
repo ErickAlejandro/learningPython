@@ -7,6 +7,7 @@ from flask import Flask, request, redirect, jsonify, render_template
 from werkzeug.utils import secure_filename
 from math import ceil
 import pytesseract as pyt
+from method_fund_boxes import convert_img_to_array as cita
 
 ALLOWED_EXTENSIONS = set(['jfif','txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -39,6 +40,7 @@ def upload_file():
         #npimg = numpy.fromstring(filestr, numpy.uint8)
         img = cv2.imdecode(npimg,1)
         print(img)
+        cita(img)
         #np.savetxt("datos.csv",img, delimiter=",")
         resp = jsonify({'message' : 'File successfully uploaded'})
         resp.status_code = 201
