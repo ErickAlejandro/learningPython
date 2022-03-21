@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 from math import ceil
 import pytesseract as pyt
-import torch
 
 
 def ocr(bbox):
@@ -15,17 +14,15 @@ def ocr(bbox):
     text = text.replace('&L ', '')
     print('Informacion de la fila: ' + str(text))
     return text
+    #plt.show()
 
 
-def convert_img_to_array(img):
-    # Toma la imagen desde el webservice
-    model = torch.hub.load(
-        '', 'best')
-    image = img
-    results = model(image)
-    results.pandas().xyxy[0]
+def convert_img_to_array(coordinates, img):
+    # extrear la informacion como un array
+    with open(coordinates, 'r') as t:
+        datos = ''.join(t.readlines()).replace('\n', ';')
 
-    m = np.matrix(results)
+    m = np.matrix(datos)
     information = []
 
     # ordenar la matriz
@@ -66,8 +63,10 @@ def convert_img_to_array(img):
         information.append(cortado)
         i += 1
 
-    print('Informacion general\n' + str(information))
+    print('Informacion general' + str(information))
+
 
 
 if __name__ == "__main__":
-    convert_img_to_array()
+    convert_img_to_array(
+        'information.txt', '2f05e196-c6b2-4694-953c-daa69846cb1d.jpg')

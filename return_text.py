@@ -49,6 +49,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
+coordinates = open('')
 
 @torch.no_grad()
 def run(weights=ROOT / '/runs/train/exp7/weights/best.pt',  # model.pt path(s)
