@@ -39,7 +39,7 @@ def upload_file():
         npimg = np.fromstring(filestr, np.uint8)
         #npimg = numpy.fromstring(filestr, numpy.uint8)
         img = cv2.imdecode(npimg,1)
-        print(img)
+        #print(img)
         cita(img)
         #np.savetxt("datos.csv",img, delimiter=",")
         resp = jsonify({'message' : 'File successfully uploaded'})

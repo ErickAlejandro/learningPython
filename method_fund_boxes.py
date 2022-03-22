@@ -19,20 +19,22 @@ def ocr(bbox):
 
 def convert_img_to_array(img):
     # Toma la imagen desde el webservice
-    model = torch.hub.load('', 'best')
-    image = img
-    results = model(image)
-    m = np.matrix(results)
+    #print(img)
+    model = torch.hub.load('ultralytics/yolov5', 'custom',
+                           path='best.pt', device='cpu')
+    results = model(img)
+    results = results.pandas().xyxy[0]
+    
+    m = results
+    m = m.iloc[:, 0:4]
+    m = m.to_numpy(m)
+    print(type(m))
+    
     information = []
 
-    # ordenar la matriz
-    m = np.array(m)
-    m = m[m[:, 0].argsort()]
-    print(m)
-
     # Extraer las dimensiones de la imagen a usar
-    image = cv2.imread(img)
-    y, x = image.shape[:2]
+    ##image = cv2.imread(img)
+    y, x = img.shape[:2]
     print('\nEl ancho: ' + str(x) + ' y el alto: ' + str(y) + '\n')
 
     # Tranformacion de pixel para ingresar los datos en el OCR
