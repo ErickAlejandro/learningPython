@@ -32,6 +32,7 @@ def convert_img_to_array(coordinates, img):
 
     # Extraer las dimensiones de la imagen a usar
     image = cv2.imread(img)
+    print(image)
     y, x = image.shape[:2]
     print('\nEl ancho: ' + str(x) + ' y el alto: ' + str(y) + '\n')
 
