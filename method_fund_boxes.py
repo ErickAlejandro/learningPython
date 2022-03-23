@@ -27,7 +27,7 @@ def convert_img_to_array(img):
     
     m = results
     m = m.iloc[:, 0:4]
-    m = m.to_numpy(m)
+    m = m.to_numpy(m) #Transformar la matrix panda a numpy
     print(type(m))
     
     information = []
@@ -43,7 +43,7 @@ def convert_img_to_array(img):
         print('Fila de contador numero ' + str(i))
         print('Ancho en escala 0 - 1 en \nPunto medio en X: ' + str(m[i, 1]) + '\nPunto medio en Y:' + str(
             m[i, 2]) + '\nAncho: ' + str(m[i, 3]) + '\nAlto: ' + str(m[i, 4]) + '\n')
-        x_center = x * m[i, 1]
+        x_center = x * m[i, 1] #Buscar los calculos de cada uno de los puntos maximos y minimos
         y_center = y * m[i, 2]
         transform_ruler3_w = (x * m[i, 3]) / 2
         transform_ruler3_h = (y * m[i, 4]) / 2
