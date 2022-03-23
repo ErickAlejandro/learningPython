@@ -1,3 +1,4 @@
+from unittest import result
 import numpy as np
 import cv2
 from math import ceil
@@ -25,9 +26,8 @@ def convert_img_to_array(img):
     results = model(img)
     results = results.pandas().xyxy[0]
     
-    m = results
-    m = m.iloc[:, 0:4]
-    m = m.to_numpy(m) #Transformar la matrix panda a numpy
+    m = results.to_numpy() #Transformar la matrix panda a numpy
+    print(m)
     print(type(m))
     
     information = []
@@ -41,26 +41,30 @@ def convert_img_to_array(img):
     i = 1
     for i in range(len(m)):
         print('Fila de contador numero ' + str(i))
-        print('Ancho en escala 0 - 1 en \nPunto medio en X: ' + str(m[i, 1]) + '\nPunto medio en Y:' + str(
-            m[i, 2]) + '\nAncho: ' + str(m[i, 3]) + '\nAlto: ' + str(m[i, 4]) + '\n')
-        x_center = x * m[i, 1] #Buscar los calculos de cada uno de los puntos maximos y minimos
-        y_center = y * m[i, 2]
-        transform_ruler3_w = (x * m[i, 3]) / 2
-        transform_ruler3_h = (y * m[i, 4]) / 2
+        xmin = m[i, 0]
+        ymin = m[i, 1]
+        xmax = m[i, 2]
+        ymax = m[i, 3]
+        print('Punto Xmin' + str(xmin) + '\nPunto Ymin' + str(
+            ymin) + '\nXmax: ' + str(xmax) + '\nymax: ' + str(ymax) + '\n')
 
-        print('Escala en PIXELS \nPunto medio en X: ' + str(x_center) + ' PX \nPunto medio en Y: ' + str(y_center) +
-              " PX \nAncho: " + str(transform_ruler3_w) + ' PX \nAlto: ' + str(transform_ruler3_h) + ' PX \n')
+        # x_center = x * m[i, 1] #Buscar los calculos de cada uno de los puntos maximos y minimos
+        # y_center = y * m[i, 2]
+        # transform_ruler3_w = (x * m[i, 3]) / 2
+        # transform_ruler3_h = (y * m[i, 4]) / 2
+
+        # print('Escala en PIXELS \nPunto medio en X: ' + str(x_center) + ' PX \nPunto medio en Y: ' + str(y_center) +
+        #       " PX \nAncho: " + str(transform_ruler3_w) + ' PX \nAlto: ' + str(transform_ruler3_h) + ' PX \n')
 
         # Reconstruccion del bondibox (Informacion del bondybox)
-        x0 = ceil(x_center - transform_ruler3_w)
-        y0 = ceil(y_center - transform_ruler3_h)
+        x0 = ceil(xmin)
+        y0 = ceil(ymin)
 
-        x1 = ceil(x_center + transform_ruler3_w)
-        y1 = ceil(y_center + transform_ruler3_h)
+        x1 = ceil(xmax)
+        y1 = ceil(ymax)
 
-        cortado = image[y0:y1, x0:x1]
+        cortado = img[y0:y1, x0:x1]
         cortado = ocr(cortado)
-        #imgplot = plt.imshow(cortado)
 
         information.append(cortado)
         i += 1
