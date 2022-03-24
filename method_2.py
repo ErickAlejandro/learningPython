@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from math import ceil
 import pytesseract as pyt
+import matplotlib.pyplot as plt
 
 
 def ocr(bbox):
@@ -14,7 +15,7 @@ def ocr(bbox):
     text = text.replace('&L ', '')
     print('Informacion de la fila: ' + str(text))
     return text
-    #plt.show()
+    plt.show()
 
 
 def convert_img_to_array(coordinates, img):
@@ -59,7 +60,7 @@ def convert_img_to_array(coordinates, img):
 
         cortado = image[y0:y1, x0:x1]
         cortado = ocr(cortado)
-        #imgplot = plt.imshow(cortado)
+        imgplot = plt.imshow(cortado)
 
         information.append(cortado)
         i += 1

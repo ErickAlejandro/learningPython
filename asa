@@ -1,6 +1,7 @@
 from math import ceil
 import pytesseract as pyt
 import torch
+import matplotlib.pyplot as plt
 
 
 def ocr(bbox):
@@ -24,7 +25,7 @@ def convert_img_to_array(img):
     results = results.pandas().xyxy[0]
     
     m = results.to_numpy() #Transformar la matrix panda a numpy
-    print(m)
+    print(img.shape)
     print(type(m))
     
     information = []
@@ -37,6 +38,7 @@ def convert_img_to_array(img):
     i = 0
     for i in range(len(m)):
         print('Fila de contador numero ' + str(i))
+        print(i)
         xmin = m[i, 0]
         ymin = m[i, 1]
         xmax = m[i, 2]
@@ -50,13 +52,18 @@ def convert_img_to_array(img):
         x1 = ceil(xmax)
         y1 = ceil(ymax)
 
-        print(x0, y0, x1, y1)
+        print(x0, x1, y0, y1)
         
-        cortado = img[x0:x1, y0:y1]
+        cortado = img[y0:y1, x0:x1,:]
+        print(cortado.shape)
+
+        plt.savefig('math.png')
+        plt.show()
+
         cut = ocr(cortado)
 
         information.append(cut)
-        i += 1
+        #i += 1
 
     print('Informacion general\n' + str(information))
 

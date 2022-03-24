@@ -38,7 +38,7 @@ def upload_file():
         filestr = file.read()
         npimg = np.fromstring(filestr, np.uint8)
         #npimg = numpy.fromstring(filestr, numpy.uint8)
-        img = cv2.imdecode(npimg,1)
+        img = cv2.imdecode(npimg)
         #print(img)
         cita(img)
         #np.savetxt("datos.csv",img, delimiter=",")
