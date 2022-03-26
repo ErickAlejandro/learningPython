@@ -69,7 +69,7 @@ def convert_img_to_array(img):
         information.append(cut)
        # i += 1
 
-    #print('Informacion general\n' + str(information))
+    #print('Informacion general\n' + str(information)) #Este codigo debe ir sin comentario, RECORDATORIO
 
 
 if __name__ == "__main__":
