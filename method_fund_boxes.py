@@ -1,24 +1,22 @@
 from math import ceil
 import pytesseract as pyt
 import torch
-from matplotlib import pyplot as plt
+from matplotlib import image, pyplot as plt
 import cv2
 from PIL import Image
 
 
 def ocr(bbox):
     # Lectura de los datos con Pytesseract
-    print(bbox.shape)
+    im = bbox
     print(type(bbox))
-    im = Image.fromarray(bbox)
-    im.save("your_file.jpeg")
-    custom_oem_psm_config = r'--oem 3 --psm 6'
-    text = pyt.image_to_string(bbox)
-    #text = text.strip('\n\x0c')
-    #text = text.replace('\n', ' ')
-    #text = text.replace(' -', '-')
-    #text = text.replace('- ', '')
-    #text = text.replace('&L ', '')
+    custom_oem_psm_config = r'--oem 1 --psm 6'
+    text = pyt.image_to_string(im, lang='spa', config=custom_oem_psm_config)
+    text = text.strip('\n\x0c')
+    text = text.replace('\n', ' ')
+    text = text.replace(' -', '-')
+    text = text.replace('- ', '')
+    text = text.replace('&L ', '')
     print('Informacion de la fila: ' + text)
     return text
 
@@ -39,6 +37,7 @@ def convert_img_to_array(img):
     information = []
 
     # Extraer las dimensiones de la imagen a usar
+    # image = cv2.imread(img)
     y, x = img.shape[:2]
     #print('\nEl ancho: ' + str(x) + ' y el alto: ' + str(y) + '\n')
 
@@ -53,11 +52,11 @@ def convert_img_to_array(img):
        # print('Punto Xmin: ' + str(xmin) + '\nPunto Ymin: ' + str(
         #    ymin) + '\nXmax: ' + str(xmax) + '\nymax: ' + str(ymax) + '\n')
 
-        x0 = ceil(xmin)
-        y0 = ceil(ymin)
+        x0 = int(xmin)
+        y0 = int(ymin)
 
-        x1 = ceil(xmax)
-        y1 = ceil(ymax)
+        x1 = int(xmax)
+        y1 = int(ymax)
 
        #print(x0, x1, y0, y1)
         
@@ -69,7 +68,7 @@ def convert_img_to_array(img):
         information.append(cut)
        # i += 1
 
-    #print('Informacion general\n' + str(information)) #Este codigo debe ir sin comentario, RECORDATORIO
+    print('Informacion general\n' + str(information))
 
 
 if __name__ == "__main__":
